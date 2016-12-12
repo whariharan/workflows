@@ -1,7 +1,8 @@
 var gulp=require('gulp'),
 	gUtil=require('gulp-util'),
 	coffee=require('gulp-coffee'),
-	concat=require('gulp-concat');
+	concat=require('gulp-concat'),
+	browseify=require('gulp-browserify');
 
 
 gulp.task('log',function(){
@@ -25,5 +26,6 @@ gulp.task('coffee',function(){
 gulp.task('js',function(){
 	gulp.src(jsSources)
 	.pipe(concat('script.js'))
+	.pipe(browseify())
 	.pipe(gulp.dest('builds/development/js'));
 });
