@@ -3,7 +3,8 @@ var gulp=require('gulp'),
 	coffee=require('gulp-coffee'),
 	concat=require('gulp-concat'),
 	browseify=require('gulp-browserify'),
-	compass=require('gulp-compass');
+	compass=require('gulp-compass'),
+	connect=require('gulp-connect');
 
 
 gulp.task('log',function(){
@@ -29,7 +30,8 @@ gulp.task('js',function(){
 	gulp.src(jsSources)
 	.pipe(concat('script.js'))
 	.pipe(browseify())
-	.pipe(gulp.dest('builds/development/js'));
+	.pipe(gulp.dest('builds/development/js'))
+	.pipe(connect.reload());
 });
 
 gulp.task('compass',function(){
@@ -49,4 +51,11 @@ gulp.task('watch',function(){
 	gulp.watch('components/sass/*.scss',['compass']);
 });
 
-gulp.task('default',['coffee','js','compass','watch']);
+gulp.task('connect',function(){
+	connect.server({
+    root: 'builds/development/',
+    livereload: true
+  });
+});
+
+gulp.task('default',['coffee','js','compass','connect','watch']);
