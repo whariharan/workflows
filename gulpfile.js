@@ -6,7 +6,8 @@ browseify=require('gulp-browserify'),
 compass=require('gulp-compass'),
 connect=require('gulp-connect'),
 gulpIf=require('gulp-if'),
-gulpUglify=require('gulp-uglify');
+gulpUglify=require('gulp-uglify'),
+minifyHTML=require('gulp-minify-html');
 
 var env,
 	coffeeSources,
@@ -53,7 +54,7 @@ gulp.task('js',function(){
 	gulp.src(jsSources)
 	.pipe(concat('script.js'))
 	.pipe(browseify())
-	.pipe(gulpIf(env === 'production'),gulpUglify())
+	.pipe(gulpIf(env === 'production',gulpUglify()))
 	.pipe(gulp.dest(outputDir + 'js'))
 	.pipe(connect.reload());
 });
@@ -73,7 +74,7 @@ gulp.task('watch',function(){
 	gulp.watch(coffeeSources,['coffee']);
 	gulp.watch(jsSources,['js']);
 	gulp.watch('components/sass/*.scss',['compass']);
-	gulp.watch(htmlSources,['html']);
+	gulp.watch('builds/development/*.html',['html']);
 	gulp.watch(jsonSources,['json']);
 });
 
@@ -85,7 +86,9 @@ gulp.task('connect',function(){
 });
 
 gulp.task('html',function(){
-	gulp.src(htmlSources)
+	gulp.src('builds/development/*.html')
+	.pipe(gulpIf(env === 'production',minifyHTML()))
+	.pipe(gulpIf(env === 'production',gulp.dest(outputDir)))
 	.pipe(connect.reload());
 });
 gulp.task('json',function(){
